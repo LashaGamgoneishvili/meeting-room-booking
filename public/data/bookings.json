@@ -1,0 +1,125 @@
+[
+  {
+    "id": "booking-1",
+    "title": "Product planning",
+    "roomId": "room-3",
+    "organizerId": "employee-1",
+    "attendeeIds": [
+      "employee-1",
+      "employee-2",
+      "employee-3",
+      "employee-4",
+      "employee-5",
+      "employee-6"
+    ],
+    "startAt": "2026-08-27T06:00:00Z",
+    "endAt": "2026-08-27T07:00:00Z",
+    "status": "confirmed",
+    "description": "Review priorities and agree on the next product milestones."
+  },
+  {
+    "id": "booking-2",
+    "title": "Engineering stand-up",
+    "roomId": "room-2",
+    "organizerId": "employee-2",
+    "attendeeIds": [
+      "employee-2",
+      "employee-4",
+      "employee-6"
+    ],
+    "startAt": "2026-08-28T05:00:00Z",
+    "endAt": "2026-08-28T05:30:00Z",
+    "status": "confirmed",
+    "description": "Share progress, blockers, and the plan for the day."
+  },
+  {
+    "id": "booking-3",
+    "title": "Design handoff",
+    "roomId": "room-2",
+    "organizerId": "employee-3",
+    "attendeeIds": [
+      "employee-1",
+      "employee-2",
+      "employee-3",
+      "employee-5"
+    ],
+    "startAt": "2026-08-28T05:30:00Z",
+    "endAt": "2026-08-28T06:15:00Z",
+    "status": "confirmed"
+  },
+  {
+    "id": "booking-4",
+    "title": "Mentoring session",
+    "roomId": "room-1",
+    "organizerId": "employee-1",
+    "attendeeIds": [
+      "employee-1",
+      "employee-4"
+    ],
+    "startAt": "2026-08-31T06:00:00Z",
+    "endAt": "2026-08-31T06:30:00Z",
+    "status": "confirmed"
+  },
+  {
+    "id": "booking-5",
+    "title": "Quarterly roadmap review",
+    "roomId": "room-4",
+    "organizerId": "employee-1",
+    "attendeeIds": [
+      "employee-1",
+      "employee-2",
+      "employee-3",
+      "employee-4",
+      "employee-5",
+      "employee-6"
+    ],
+    "startAt": "2026-08-31T09:00:00Z",
+    "endAt": "2026-08-31T10:30:00Z",
+    "status": "confirmed",
+    "description": "Review the roadmap, dependencies, and priorities for the coming quarter."
+  },
+  {
+    "id": "booking-6",
+    "title": "Roadmap preparation",
+    "roomId": "room-4",
+    "organizerId": "employee-3",
+    "attendeeIds": [
+      "employee-3",
+      "employee-5"
+    ],
+    "startAt": "2026-08-31T09:30:00Z",
+    "endAt": "2026-08-31T10:30:00Z",
+    "status": "cancelled",
+    "description": "Cancelled after preparation was merged into the roadmap review."
+  },
+  {
+    "id": "booking-7",
+    "title": "Accessibility review",
+    "roomId": "room-3",
+    "organizerId": "employee-3",
+    "attendeeIds": [
+      "employee-2",
+      "employee-3",
+      "employee-5",
+      "employee-6"
+    ],
+    "startAt": "2026-09-01T07:00:00Z",
+    "endAt": "2026-09-01T08:00:00Z",
+    "status": "confirmed",
+    "description": "Review keyboard navigation, form labels, and screen reader feedback."
+  },
+  {
+    "id": "booking-8",
+    "title": "Pairing session",
+    "roomId": "room-1",
+    "organizerId": "employee-6",
+    "attendeeIds": [
+      "employee-4",
+      "employee-6"
+    ],
+    "startAt": "2026-08-28T10:00:00Z",
+    "endAt": "2026-08-28T10:30:00Z",
+    "status": "cancelled",
+    "description": "Cancelled because the participants completed the review asynchronously."
+  }
+]

@@ -1,0 +1,40 @@
+[
+  {
+    "id": "room-1",
+    "name": "Focus",
+    "location": "Floor 1",
+    "capacity": 2,
+    "amenities": []
+  },
+  {
+    "id": "room-2",
+    "name": "Workshop",
+    "location": "Floor 1",
+    "capacity": 4,
+    "amenities": [
+      "whiteboard",
+      "projector"
+    ]
+  },
+  {
+    "id": "room-3",
+    "name": "Conference",
+    "location": "Floor 2",
+    "capacity": 6,
+    "amenities": [
+      "display",
+      "video-conferencing"
+    ]
+  },
+  {
+    "id": "room-4",
+    "name": "Boardroom",
+    "location": "Floor 2",
+    "capacity": 10,
+    "amenities": [
+      "whiteboard",
+      "display",
+      "video-conferencing"
+    ]
+  }
+]

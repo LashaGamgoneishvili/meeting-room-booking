@@ -1,0 +1,32 @@
+[
+  {
+    "id": "employee-1",
+    "name": "Nino Gelashvili",
+    "email": "nino.gelashvili@meeting.example"
+  },
+  {
+    "id": "employee-2",
+    "name": "Giorgi Maisuradze",
+    "email": "giorgi.maisuradze@meeting.example"
+  },
+  {
+    "id": "employee-3",
+    "name": "Ana Beridze",
+    "email": "ana.beridze@meeting.example"
+  },
+  {
+    "id": "employee-4",
+    "name": "Luka Dadiani",
+    "email": "luka.dadiani@meeting.example"
+  },
+  {
+    "id": "employee-5",
+    "name": "Mariam Kapanadze",
+    "email": "mariam.kapanadze@meeting.example"
+  },
+  {
+    "id": "employee-6",
+    "name": "Saba Lomadze",
+    "email": "saba.lomadze@meeting.example"
+  }
+]
