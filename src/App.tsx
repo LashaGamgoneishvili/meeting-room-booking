@@ -1,5 +1,11 @@
+import { Route, Routes } from "react-router";
 import "./App.css";
+import DashboardPage from "./pages/DashboardPage";
 import { useAppContext } from "./state/appContextDefinition";
+import RoomsPage from "./pages/RoomsPage";
+import CalendarPage from "./pages/CalendarPage";
+import BookingsPage from "./pages/BookingsPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   const { state } = useAppContext();
@@ -21,10 +27,13 @@ function App() {
   }
   return (
     <main>
-      <h1>Meeting Room Booking</h1>
-      <p>Rooms: {state.rooms.length}</p>
-      <p>Employees: {state.employees.length}</p>
-      <p>Booking: {state.bookings.length}</p>
+      <Routes>
+        <Route path="/" element={<DashboardPage />} />
+        <Route path="/rooms" element={<RoomsPage />} />
+        <Route path="/calendar" element={<CalendarPage />} />
+        <Route path="/bookings" element={<BookingsPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </main>
   );
 }
