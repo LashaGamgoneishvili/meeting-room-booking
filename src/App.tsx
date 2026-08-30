@@ -31,6 +31,7 @@ function App() {
       <Route element={<AppLayout />}>
         <Route index element={<DashboardPage />} />
         <Route path="rooms" element={<RoomsPage />} />
+        <Route path="rooms/:roomId" element={<RoomsPage />} />
         <Route path="calendar" element={<CalendarPage />} />
         <Route path="bookings" element={<BookingsPage />} />
         <Route path="*" element={<NotFoundPage />} />
