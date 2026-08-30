@@ -1,11 +1,12 @@
 import { Route, Routes } from "react-router";
 import "./App.css";
+import AppLayout from "./components/layout/AppLayout";
 import DashboardPage from "./pages/DashboardPage";
-import { useAppContext } from "./state/appContextDefinition";
 import RoomsPage from "./pages/RoomsPage";
 import CalendarPage from "./pages/CalendarPage";
 import BookingsPage from "./pages/BookingsPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import { useAppContext } from "./state/appContextDefinition";
 
 function App() {
   const { state } = useAppContext();
@@ -25,16 +26,17 @@ function App() {
       </main>
     );
   }
+
   return (
-    <main>
-      <Routes>
-        <Route path="/" element={<DashboardPage />} />
-        <Route path="/rooms" element={<RoomsPage />} />
-        <Route path="/calendar" element={<CalendarPage />} />
-        <Route path="/bookings" element={<BookingsPage />} />
+    <Routes>
+      <Route element={<AppLayout />}>
+        <Route index element={<DashboardPage />} />
+        <Route path="rooms" element={<RoomsPage />} />
+        <Route path="calendar" element={<CalendarPage />} />
+        <Route path="bookings" element={<BookingsPage />} />
         <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </main>
+      </Route>
+    </Routes>
   );
 }
 
