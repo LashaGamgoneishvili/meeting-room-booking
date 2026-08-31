@@ -2,6 +2,10 @@
 
 A responsive meeting room booking application built with React and TypeScript. It allows users to review room availability, browse daily and weekly schedules, and manage bookings without a backend.
 
+## Live Demo
+
+[View the deployed application](https://meeting-room-booking-opal.vercel.app/)
+
 ## Features
 
 - Dashboard with booking and room availability summaries
