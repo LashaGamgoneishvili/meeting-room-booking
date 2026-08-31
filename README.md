@@ -1,32 +1,113 @@
-# React + TypeScript + Vite
+# Meeting Room Booking
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A responsive meeting room booking application built with React and TypeScript. It allows users to review room availability, browse daily and weekly schedules, and manage bookings without a backend.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Dashboard with booking and room availability summaries
+- Responsive room list and room detail views
+- Daily and weekly calendar views
+- URL-backed calendar date and view selection
+- Booking search and filtering by room and status
+- Create, edit, cancel, and delete bookings
+- Room capacity and scheduling conflict validation
+- Persistent booking changes using local storage
+- Responsive navigation and layouts
+- Accessible deletion confirmation dialog
 
-## React Compiler
+## Technology
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- TypeScript
+- Vite
+- React Router
+- Tailwind CSS
+- Browser local storage
 
-## Expanding the Oxlint configuration
+## Running Locally
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+Install dependencies:
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Create a production build:
+
+```bash
+npm run build
+```
+
+Run the linter:
+
+```bash
+npm run lint
+```
+
+## Application Routes
+
+| Route            | Description               |
+| ---------------- | ------------------------- |
+| `/`              | Dashboard                 |
+| `/rooms`         | Room list                 |
+| `/rooms/:roomId` | Selected room details     |
+| `/calendar`      | Daily and weekly calendar |
+| `/bookings`      | Booking management        |
+
+Calendar state is stored in the URL using `date` and `view` query parameters.
+
+Booking search, room filters, status filters, and create or edit state are also represented using URL query parameters.
+
+## Data and Persistence
+
+Initial rooms, employees, and bookings are loaded from JSON files in `public/data`.
+
+Booking data is copied to local storage on the first visit. Creating, editing, cancelling, or deleting a booking updates local storage so changes remain after a page refresh.
+
+The local storage key is:
+
+```text
+meeting-room-booking:bookings:v1
+```
+
+Clearing this key restores the initial bookings from the JSON seed on the next page load.
+
+## Booking Rules
+
+- A booking must have a title, room, organizer, start time, and end time.
+- The end time must be later than the start time.
+- The organizer is included in the attendee list.
+- The total attendee count cannot exceed room capacity.
+- Confirmed bookings for the same room cannot overlap.
+- Back-to-back bookings are allowed.
+- Cancelled bookings do not reserve a room or create scheduling conflicts.
+
+## Date and Time Handling
+
+Date and time inputs use the browser’s local time zone. Booking timestamps are stored as ISO strings and formatted for the user’s locale when displayed.
+
+## Project Structure
+
+```text
+public/data                 Initial JSON data
+src/components              Reusable UI components
+src/pages                   Route-level pages
+src/services                Data loading and persistence
+src/state                   Shared application state
+src/utils                   Date and booking validation utilities
+src/types.ts                Shared TypeScript models
+```
+
+## Assumptions
+
+- The application has no authentication or backend.
+- Rooms and employees are read-only.
+- Booking changes are stored only in the current browser.
+- All attendees, including the organizer, count toward room capacity.
+- A cancelled booking remains visible until it is explicitly deleted.
