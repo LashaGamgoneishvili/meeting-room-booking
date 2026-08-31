@@ -8,7 +8,7 @@ A responsive meeting room booking application built with React and TypeScript. I
 - Responsive room list and room detail views
 - Daily and weekly calendar views
 - URL-backed calendar date and view selection
-- Booking search and filtering by room and status
+- Booking search, filtering, and URL-backed pagination
 - Create, edit, cancel, and delete bookings
 - Room capacity and scheduling conflict validation
 - Persistent booking changes using local storage
@@ -62,7 +62,7 @@ npm run lint
 
 Calendar state is stored in the URL using `date` and `view` query parameters.
 
-Booking search, room filters, status filters, and create or edit state are also represented using URL query parameters.
+Booking search, room filters, status filters, pagination, and create or edit state are also represented using URL query parameters.
 
 ## Data and Persistence
 

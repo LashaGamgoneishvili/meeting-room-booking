@@ -10,6 +10,8 @@ const dateTimeFormatter = new Intl.DateTimeFormat(undefined, {
   timeStyle: "short",
 });
 
+const BOOKINGS_PER_PAGE = 5;
+
 function BookingsPage() {
   const { state, createBooking, updateBooking, deleteBooking } =
     useAppContext();
@@ -37,6 +39,11 @@ function BookingsPage() {
     statusParameter === "confirmed" || statusParameter === "cancelled"
       ? statusParameter
       : "";
+
+  const pageParameter = Number(searchParams.get("page"));
+
+  const requestedPage =
+    Number.isInteger(pageParameter) && pageParameter > 0 ? pageParameter : 1;
 
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
@@ -70,6 +77,19 @@ function BookingsPage() {
         Date.parse(firstBooking.startAt) - Date.parse(secondBooking.startAt),
     );
 
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredBookings.length / BOOKINGS_PER_PAGE),
+  );
+
+  const currentPage = Math.min(requestedPage, totalPages);
+  const firstBookingIndex = (currentPage - 1) * BOOKINGS_PER_PAGE;
+
+  const paginatedBookings = filteredBookings.slice(
+    firstBookingIndex,
+    firstBookingIndex + BOOKINGS_PER_PAGE,
+  );
+
   function updateFilter(name: "q" | "room" | "status", value: string): void {
     const nextParameters = new URLSearchParams(searchParams);
 
@@ -79,9 +99,23 @@ function BookingsPage() {
       nextParameters.set(name, value);
     }
 
+    nextParameters.delete("page");
+
     setSearchParams(nextParameters, {
       replace: true,
     });
+  }
+
+  function updatePage(page: number): void {
+    const nextParameters = new URLSearchParams(searchParams);
+
+    if (page <= 1) {
+      nextParameters.delete("page");
+    } else {
+      nextParameters.set("page", String(page));
+    }
+
+    setSearchParams(nextParameters);
   }
 
   function openCreateForm(): void {
@@ -241,110 +275,151 @@ function BookingsPage() {
           </p>
         </div>
       ) : (
-        <ul className="space-y-4">
-          {filteredBookings.map((booking) => {
-            const room = state.rooms.find((item) => item.id === booking.roomId);
+        <>
+          <ul className="space-y-4">
+            {paginatedBookings.map((booking) => {
+              const room = state.rooms.find(
+                (item) => item.id === booking.roomId,
+              );
 
-            const organizer = state.employees.find(
-              (employee) => employee.id === booking.organizerId,
-            );
+              const organizer = state.employees.find(
+                (employee) => employee.id === booking.organizerId,
+              );
 
-            return (
-              <li
-                key={booking.id}
-                className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-              >
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="min-w-0">
-                    <h2
-                      className={[
-                        "text-lg font-semibold",
-                        booking.status === "cancelled"
-                          ? "text-slate-500 line-through"
-                          : "text-slate-950",
-                      ].join(" ")}
-                    >
-                      {booking.title}
-                    </h2>
+              return (
+                <li
+                  key={booking.id}
+                  className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+                >
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <h2
+                        className={[
+                          "text-lg font-semibold",
+                          booking.status === "cancelled"
+                            ? "text-slate-500 line-through"
+                            : "text-slate-950",
+                        ].join(" ")}
+                      >
+                        {booking.title}
+                      </h2>
 
-                    <p className="mt-2 text-sm text-slate-600">
-                      <time dateTime={booking.startAt}>
-                        {dateTimeFormatter.format(new Date(booking.startAt))}
-                      </time>
-                      <span> to </span>
-                      <time dateTime={booking.endAt}>
-                        {dateTimeFormatter.format(new Date(booking.endAt))}
-                      </time>
+                      <p className="mt-2 text-sm text-slate-600">
+                        <time dateTime={booking.startAt}>
+                          {dateTimeFormatter.format(new Date(booking.startAt))}
+                        </time>
+                        <span> to </span>
+                        <time dateTime={booking.endAt}>
+                          {dateTimeFormatter.format(new Date(booking.endAt))}
+                        </time>
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={[
+                          "w-fit rounded-full px-3 py-1 text-xs font-semibold capitalize",
+                          booking.status === "confirmed"
+                            ? "bg-emerald-50 text-emerald-700"
+                            : "bg-slate-100 text-slate-600",
+                        ].join(" ")}
+                      >
+                        {booking.status}
+                      </span>
+
+                      <button
+                        type="button"
+                        onClick={() => openEditForm(booking.id)}
+                        className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 cursor-pointer"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setBookingToDelete(booking)}
+                        className="rounded-lg border border-red-200 bg-white px-3 py-1.5 text-sm font-semibold text-red-700 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 cursor-pointer"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+
+                  <dl className="mt-5 grid gap-4 border-t border-slate-200 pt-5 sm:grid-cols-3">
+                    <div>
+                      <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        Room
+                      </dt>
+                      <dd className="mt-1 text-sm text-slate-700">
+                        {room?.name ?? "Unknown room"}
+                      </dd>
+                    </div>
+
+                    <div>
+                      <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        Organizer
+                      </dt>
+                      <dd className="mt-1 text-sm text-slate-700">
+                        {organizer?.name ?? "Unknown organizer"}
+                      </dd>
+                    </div>
+
+                    <div>
+                      <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        Attendees
+                      </dt>
+                      <dd className="mt-1 text-sm text-slate-700">
+                        {booking.attendeeIds.length}
+                      </dd>
+                    </div>
+                  </dl>
+
+                  {booking.description && (
+                    <p className="mt-5 text-sm text-slate-600">
+                      {booking.description}
                     </p>
-                  </div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+          <nav
+            aria-label="Bookings pagination"
+            className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+          >
+            <p className="text-sm text-slate-600">
+              Showing {firstBookingIndex + 1}–
+              {Math.min(
+                firstBookingIndex + BOOKINGS_PER_PAGE,
+                filteredBookings.length,
+              )}{" "}
+              of {filteredBookings.length} bookings
+            </p>
 
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={[
-                        "w-fit rounded-full px-3 py-1 text-xs font-semibold capitalize",
-                        booking.status === "confirmed"
-                          ? "bg-emerald-50 text-emerald-700"
-                          : "bg-slate-100 text-slate-600",
-                      ].join(" ")}
-                    >
-                      {booking.status}
-                    </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                disabled={currentPage === 1}
+                onClick={() => updatePage(currentPage - 1)}
+                className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Previous
+              </button>
 
-                    <button
-                      type="button"
-                      onClick={() => openEditForm(booking.id)}
-                      className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 cursor-pointer"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setBookingToDelete(booking)}
-                      className="rounded-lg border border-red-200 bg-white px-3 py-1.5 text-sm font-semibold text-red-700 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 cursor-pointer"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
+              <span className="px-2 text-sm text-slate-600">
+                Page {currentPage} of {totalPages}
+              </span>
 
-                <dl className="mt-5 grid gap-4 border-t border-slate-200 pt-5 sm:grid-cols-3">
-                  <div>
-                    <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      Room
-                    </dt>
-                    <dd className="mt-1 text-sm text-slate-700">
-                      {room?.name ?? "Unknown room"}
-                    </dd>
-                  </div>
-
-                  <div>
-                    <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      Organizer
-                    </dt>
-                    <dd className="mt-1 text-sm text-slate-700">
-                      {organizer?.name ?? "Unknown organizer"}
-                    </dd>
-                  </div>
-
-                  <div>
-                    <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      Attendees
-                    </dt>
-                    <dd className="mt-1 text-sm text-slate-700">
-                      {booking.attendeeIds.length}
-                    </dd>
-                  </div>
-                </dl>
-
-                {booking.description && (
-                  <p className="mt-5 text-sm text-slate-600">
-                    {booking.description}
-                  </p>
-                )}
-              </li>
-            );
-          })}
-        </ul>
+              <button
+                type="button"
+                disabled={currentPage === totalPages}
+                onClick={() => updatePage(currentPage + 1)}
+                className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          </nav>
+        </>
       )}
     </section>
   );
