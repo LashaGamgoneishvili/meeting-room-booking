@@ -2,11 +2,18 @@ import { useEffect, useReducer } from "react";
 import { appReducer, initialAppState } from "./appReducer";
 
 import { getRooms, getEmployees } from "../services/dataService";
-import { loadBookings } from "../services/bookingRepository";
+import { loadBookings, saveBookings } from "../services/bookingRepository";
 import { AppContext, type AppProviderProps } from "./appContextDefinition";
+import type { Booking } from "../types";
 
 export function AppProvider({ children }: AppProviderProps) {
   const [state, dispatch] = useReducer(appReducer, initialAppState);
+
+  useEffect(() => {
+    if (state.status === "ready") {
+      saveBookings(state.bookings);
+    }
+  }, [state.bookings, state.status]);
 
   useEffect(() => {
     let cancelled = false;
@@ -59,5 +66,37 @@ export function AppProvider({ children }: AppProviderProps) {
     };
   }, []);
 
-  return <AppContext value={{ state }}>{children}</AppContext>;
+  function createBooking(booking: Booking): void {
+    dispatch({
+      type: "bookingCreated",
+      payload: booking,
+    });
+  }
+
+  function updateBooking(booking: Booking): void {
+    dispatch({
+      type: "bookingUpdated",
+      payload: booking,
+    });
+  }
+
+  function deleteBooking(bookingId: string): void {
+    dispatch({
+      type: "bookingDeleted",
+      payload: bookingId,
+    });
+  }
+
+  return (
+    <AppContext
+      value={{
+        state,
+        createBooking,
+        updateBooking,
+        deleteBooking,
+      }}
+    >
+      {children}
+    </AppContext>
+  );
 }

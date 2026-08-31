@@ -31,6 +31,18 @@ export type AppAction =
   | {
       type: "loadFailed";
       payload: string;
+    }
+  | {
+      type: "bookingCreated";
+      payload: Booking;
+    }
+  | {
+      type: "bookingUpdated";
+      payload: Booking;
+    }
+  | {
+      type: "bookingDeleted";
+      payload: string;
     };
 
 export function appReducer(state: AppState, action: AppAction): AppState {
@@ -56,6 +68,28 @@ export function appReducer(state: AppState, action: AppAction): AppState {
         ...state,
         status: "error",
         error: action.payload,
+      };
+
+    case "bookingCreated":
+      return {
+        ...state,
+        bookings: [...state.bookings, action.payload],
+      };
+
+    case "bookingUpdated":
+      return {
+        ...state,
+        bookings: state.bookings.map((booking) =>
+          booking.id === action.payload.id ? action.payload : booking,
+        ),
+      };
+
+    case "bookingDeleted":
+      return {
+        ...state,
+        bookings: state.bookings.filter(
+          (booking) => booking.id !== action.payload,
+        ),
       };
 
     default:
